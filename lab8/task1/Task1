@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <algorithm>
@@ -45,6 +45,29 @@ std::string is_bukv(std::string s) //не буква - удалить
 	return result;
 }
 
+std::string uniq(std::string word)//оставляет только уникальные буквы в слове
+{
+	std::string result = "";
+	result += word[0];
+	for (int i = 1; i < word.length(); i++)
+	{
+		for (int j = 0; j < result.length(); j++)
+		{
+			if (word[i] == result[j])
+			{
+				break;
+			}
+			else if (j == result.length() - 1)
+			{
+				result += word[i];
+			}
+		}
+
+	}
+	return result;
+}
+
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -63,7 +86,7 @@ int main()
 	str = is_bukv(str);
 	//std::cout << str;
 
-	while (!in.eof())
+	while (!in.eof()) 
 	{
 		std::string text;
 		in >> text;
@@ -80,7 +103,7 @@ int main()
 	{
 		std::string dodik;
 		dodik = is_bukv(mas[j]);
-		if (used_let(str, dodik) == 1)
+		if (used_let(str, uniq(dodik)) == 1)
 			out_mas[newword] = mas[j];
 			newword++;
 	}
@@ -115,6 +138,7 @@ int main()
 
 	for (int j = 0; j < h; j++) //вывод
 	{
-		out << out_mas2[j] << std::endl;
+		std::cout << out_mas2[j] << std::endl;
+		//out << out_mas2[j] << std::endl;
 	}
 }
