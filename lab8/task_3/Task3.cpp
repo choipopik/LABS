@@ -153,6 +153,7 @@ int main()
 	for (int j = 0; j < text_size; j++) //вывод
 	{
 		std::cout << text2[j] << " ";
+		//out << text2[j] << std::endl;
 	}
 
 	
