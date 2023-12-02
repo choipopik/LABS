@@ -40,7 +40,7 @@ namespace fnc
         {
             for (int j = 0; j < n; j++)
             {
-                if ((i == j) and (matrix[i][j] > 0) and (have_35(matrix[i][j])))
+                if (((i == j) or ((i+j)==n)) and (matrix[i][j] > 0) and (have_35(matrix[i][j])))
                 {
                     counter++;
                 }
