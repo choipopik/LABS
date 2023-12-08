@@ -1,4 +1,5 @@
-﻿#include <iostream>
+
+#include <iostream>
 
 int sum_num(int x)
 {
