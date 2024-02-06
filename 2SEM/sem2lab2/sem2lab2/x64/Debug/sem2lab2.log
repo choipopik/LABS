@@ -1,0 +1,7 @@
+﻿  sem2lab2.cpp
+C:\Git\LABS\sem2lab2\sem2lab2\sem2lab2.cpp(17,17): warning C4244: =: преобразование "float" в "int", возможна потеря данных
+C:\Git\LABS\sem2lab2\sem2lab2\sem2lab2.cpp(22,30): warning C4244: return: преобразование "int" в "float", возможна потеря данных
+C:\Git\LABS\sem2lab2\sem2lab2\sem2lab2.cpp(26,30): warning C4244: return: преобразование "int" в "float", возможна потеря данных
+C:\Git\LABS\sem2lab2\sem2lab2\sem2lab2.cpp(30,22): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+C:\Git\LABS\sem2lab2\sem2lab2\sem2lab2.cpp(18): warning C4715: Cube::setEdge: значение возвращается не при всех путях выполнения
+  sem2lab2.vcxproj -> C:\Git\LABS\sem2lab2\x64\Debug\sem2lab2.exe
