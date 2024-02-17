@@ -19,17 +19,9 @@ public:
 		_str[len] = '\0';
 	}
 
-	zxString(const zxString& other) //copy constr
+	zxString(const zxString& other) : zxString(other._str)//copy constr
 	{
-		int len = strlen(other._str);
-		_str = new char[len + 1];
-
-		for (int i = 0; i < len; i++)
-		{
-			_str[i] = other._str[i];
-		}
-
-		_str[len] = '\0';
+		
 	}
 
 	zxString& operator=(const zxString& other)
