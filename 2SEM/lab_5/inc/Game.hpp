@@ -36,7 +36,7 @@ namespace mt
 			m_kpyr = new mt::Circle[m_n];
 			for (int i = 0; i < m_n; i++)
 			{
-				int r = rand() % 100 + 10;
+				int r = rand() % 30 + 10;
 				int x = rand() % 1000 + r;
 				if (x - r < 0)
 					x = r;
