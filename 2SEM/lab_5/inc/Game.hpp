@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <iostream>
+#include <hero.hpp>
 
 namespace mt
 {
@@ -15,6 +17,11 @@ namespace mt
 		sf::RenderWindow m_window;
 		sf::Clock clock;
 
+		sf::Texture m_bg_txr;
+		sf::Sprite m_bg_spr;
+
+		mt::Hero m_hero;
+
 	public:
 		Game1(int width, int height, const std::string& capture)
 		{
@@ -22,17 +29,38 @@ namespace mt
 			m_width = width;
 			m_height = height;
 			m_capture = capture;
+
 		}
 
-		void Setup(int n)
+		bool Setup(int n)
 		{
 			m_n = n;
 
+
+			//window setup
 			m_window.create(sf::VideoMode(m_width, m_height), m_capture);
 			m_window.setTitle(m_capture);
 
+			//bg setup
+			if (!m_bg_txr.loadFromFile("img\\bg.jpg"))
+			{
+				std::cout << "bg texture loading error" << std::endl;
+				return 0;
+			}
+			m_bg_spr.setTexture(m_bg_txr);
+
+			//hero setup
+			if (!m_hero.Setup(0,0))
+			{
+				std::cout << "hero setup error" << std::endl;
+				return 0;
+			}
+
 			srand(time(0));
 
+			
+
+			//circle setup
 			m_kpyr = new mt::Circle[m_n];
 			for (int i = 0; i < m_n; i++)
 			{
@@ -54,6 +82,7 @@ namespace mt
 				m_kpyr[i].Setup(x, y, r, red, v, vAng);
 			}
 		}
+
 
 		void brdrColl(Circle& obj)
 		{
@@ -100,33 +129,85 @@ namespace mt
 			/*if (obj1.objBounds().contains(x2 + r2, y2 + r2))
 			{
 				
-			}*/
+			}*/						
+		}
 
-						
+		void heroColl(Hero& hero, Circle& obj)
+		{
+			if (hero.SpriteGet().getGlobalBounds().intersects(obj.objBounds()))
+			{
+				std::cout << "collide" << std::endl;
+
+			}
+
 		}
 
 		void LifeCycle()
 		{
 			while (m_window.isOpen())
 			{
+
+				float dt = clock.getElapsedTime().asSeconds();
+				clock.restart();
+
 				sf::Event event;
 				while (m_window.pollEvent(event))
 				{
 					if (event.type == sf::Event::Closed)
 						m_window.close();
+
+					//movement animation
+					if (event.type == sf::Event::KeyReleased)
+					{
+						m_hero.MoveAnim(0);
+					}
+					if (event.type == sf::Event::KeyPressed)
+					{
+						std::cout << dt << std::endl;
+						if ((int(dt*100000)) % 3 == 0)
+							m_hero.MoveAnim(1);
+						else
+							m_hero.MoveAnim(2);
+					}
 				}
 
-				//logic
-				float dt = clock.getElapsedTime().asSeconds();
-				clock.restart();
+				
+
+				//movement
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+				{
+					m_hero.Move(0,-0.1);
+
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+				{
+					m_hero.Move(0,0.1);
+
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+				{
+					m_hero.Move(0.1, 0);
+
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+				{
+					m_hero.Move(-0.1, 0);
+
+				}
+
 
 				for (int i = 0; i < m_n; i++)
+				{
 					m_kpyr[i].Move(dt);
+				}
 
 				//collision
 
 				for (int i = 0; i < m_n; i++)
+				{
 					brdrColl(m_kpyr[i]);
+					heroColl(m_hero, m_kpyr[i]);
+				}
 
 				for (int i = 0; i < m_n; i++)
 					for (int j = i+1; j < m_n; j++)
@@ -136,186 +217,16 @@ namespace mt
 				//display
 
 				m_window.clear();
+				m_window.draw(m_bg_spr);
+				m_window.draw(m_hero.Get());
 				for (int i = 0; i < m_n; i++)
 					m_window.draw(m_kpyr[i].Get());
+
 				m_window.display();
 			}
+
+			
 		}
 
-	};
-
-
-	class Game2
-	{
-		int m_width;
-		int m_height;
-		std::string m_capture;
-		mt::Rectangle* m_rect;
-		int m_n;
-		sf::RenderWindow m_window;
-	public:
-		Game2(int width, int height, const std::string& capture)
-		{
-
-			m_width = width;
-			m_height = height;
-			m_capture = capture;
-		}
-
-		void Setup(int n)
-		{
-			m_n = n;
-
-			m_window.create(sf::VideoMode(m_width, m_height), m_capture);
-			m_window.setTitle(m_capture);
-
-			srand(time(0));
-
-			m_rect = new mt::Rectangle[m_n];
-			for (int i = 0; i < m_n; i++)
-			{
-				int x = rand() % 1000;
-				int y = rand() % 720;
-				int recth = rand() % 300 + 1;
-				int rectw = rand() % 300 + 1;
-				int angle = rand() % 360;
-				int red = rand() % 225;
-				m_rect[i].Setup(x, y, red, recth, rectw, angle);
-			}
-		}
-
-		void LifeCycle()
-		{
-			while (m_window.isOpen())
-			{
-				sf::Event event;
-				while (m_window.pollEvent(event))
-				{
-					if (event.type == sf::Event::Closed)
-						m_window.close();
-				}
-
-				m_window.clear();
-				for (int i = 0; i < m_n; i++)
-					m_window.draw(m_rect[i].Get());
-				m_window.display();
-			}
-		}
-	};
-
-	
-	class Game3
-	{
-		int m_width;
-		int m_height;
-		std::string m_capture;
-		mt::Triangle* m_trig;
-		int m_n;
-		sf::RenderWindow m_window;
-
-	public:
-		Game3(int width, int height, const std::string& capture)
-		{
-
-			m_width = width;
-			m_height = height;
-			m_capture = capture;
-		}
-
-		void Setup(int n)
-		{
-			m_n = n;
-
-			m_window.create(sf::VideoMode(m_width, m_height), m_capture);
-			m_window.setTitle(m_capture);
-
-			srand(time(0));
-
-			m_trig = new mt::Triangle[m_n];
-			for (int i = 0; i < m_n; i++)
-			{
-				int x = rand() % 1000;
-				int y = rand() % 720;
-				int r = rand() % 300 + 1;
-				int red = rand() % 225;
-				int angle = rand() % 360;
-				m_trig[i].Setup(x, y, r, red, angle);
-			}
-		}
-
-		void LifeCycle()
-		{
-			while (m_window.isOpen())
-			{
-				sf::Event event;
-				while (m_window.pollEvent(event))
-				{
-					if (event.type == sf::Event::Closed)
-						m_window.close();
-				}
-
-				m_window.clear();
-				for (int i = 0; i < m_n; i++)
-					m_window.draw(m_trig[i].Get());
-				m_window.display();
-			}
-		}
-	};
-
-	class Game4
-	{
-		int m_width;
-		int m_height;
-		std::string m_capture;
-		mt::Line* m_line;
-		int m_n;
-		sf::RenderWindow m_window;
-	public:
-		Game4(int width, int height, const std::string& capture)
-		{
-
-			m_width = width;
-			m_height = height;
-			m_capture = capture;
-		}
-
-		void Setup(int n)
-		{
-			m_n = n;
-
-			m_window.create(sf::VideoMode(m_width, m_height), m_capture);
-			m_window.setTitle(m_capture);
-
-			srand(time(0));
-
-			m_line = new mt::Line[m_n];
-			for (int i = 0; i < m_n; i++)
-			{
-				int x = rand() % 1000;
-				int y = rand() % 720;
-				int linelen = rand() % 300 + 1;
-				int angle = rand() % 360;
-				int red = rand() % 225;
-				m_line[i].Setup(x,y,red,linelen,angle);
-			}
-		}
-
-		void LifeCycle()
-		{
-			while (m_window.isOpen())
-			{
-				sf::Event event;
-				while (m_window.pollEvent(event))
-				{
-					if (event.type == sf::Event::Closed)
-						m_window.close();
-				}
-
-				m_window.clear();
-				for (int i = 0; i < m_n; i++)
-					m_window.draw(m_line[i].Get());
-				m_window.display();
-			}
-		}
 	};
 }

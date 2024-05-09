@@ -17,7 +17,7 @@ include_directories("ext/SFML/include/")	# добавляем директори
 include_directories("inc/")
 link_directories("ext/SFML/lib/")	
 
-add_executable("${PROJECT_NAME}" main.cpp inc/game.hpp inc/shapes.hpp src/game.cpp src/shapes.cpp
+add_executable("${PROJECT_NAME}" main.cpp inc/game.hpp inc/shapes.hpp inc/hero.hpp src/game.cpp src/shapes.cpp
 		
 )
 											
@@ -35,3 +35,5 @@ target_link_libraries("${PROJECT_NAME}" sfml-graphics-s-d
 						  vorbisfile
 						  vorbis
 						  ogg)
+						  
+file(COPY "img" DESTINATION "/")
